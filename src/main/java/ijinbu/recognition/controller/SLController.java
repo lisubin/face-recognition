@@ -4,20 +4,24 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ijinbu.recognition.utils.HttpUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
 @RequestMapping("/user")
 public class SLController {
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     //    @GetMapping("/getPicture")
 //    public String getPicture(){
@@ -65,15 +69,15 @@ public class SLController {
         JSONObject jsonObject = new JSONObject();
         String result = null;
         try {
-            jsonObject.put("group", "实验小学");
-            jsonObject.put("user_id", "123456789");
-            jsonObject.put("user_info", "测试");
-            jsonObject.put("image_index", 1);
+            jsonObject.put("group", "qypt");
+            jsonObject.put("user_id", "123155");
+            jsonObject.put("user_info", "jkjljkdl");
+            jsonObject.put("image_index", 3);
             String s = Base64Utils.encodeToString(file.getBytes());
             System.out.println(s);
-            jsonObject.put("image", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2299113196,3410006479&fm=27&gp=0.jpg");
+            jsonObject.put("image", s);
 //             jsonObject.put("image","https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=805299592,2646807008&fm=15&gp=0.jpg");
-            jsonObject.put("image_type", "Url");
+            jsonObject.put("image_type", "Base64");
 //             jsonObject.put("image",new String(encode));
 //             jsonObject.put("image_type","https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=805299592,2646807008&fm=15&gp=0.jpg");
             result = HttpUtils.doPost("http://192.168.1.11:18005/faceapi/v4/user/add", jsonObject.toString());
@@ -86,7 +90,7 @@ public class SLController {
     /**
      * 获得设备推送的人脸数据
      */
-    @GetMapping("/getAttendData")
+    @RequestMapping(value = "/getAttendData" ,method = RequestMethod.POST)
     @ResponseBody
     public String getFacePushData(@RequestBody String json){
         System.out.println(json);
@@ -95,7 +99,7 @@ public class SLController {
     /**
      * 获得分组下的人脸
      *
-     * @param { "group":"qytp",
+     * @param { "group":"qypt",
      *          "page_num":1,
      *          "page_size":1
      *          }
@@ -316,7 +320,7 @@ public class SLController {
     public String facePush(@RequestBody String json) {
         String result = null;
         try {
-            result = HttpUtils.doPost("http://192.168.1.11:18005/faceapi/v4/push/set", JSONObject.parseObject(json).toString());
+            result = HttpUtils.doPost("http://192.168.1.11:18005/openapi/v3/ai/device/push/set", JSONObject.parseObject(json).toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -339,6 +343,20 @@ public class SLController {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static void main(String[] args) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("device_serial","");
+        jsonObject.put("mode",2);
+        jsonObject.put("push_url","http://192.168.1.81:8020/getAttendData");
+        try {
+            String result = HttpUtils.doPost("http://192.168.1.11:18005/openapi/v3/ai/device/push/set",jsonObject.toJSONString());
+            System.out.println(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

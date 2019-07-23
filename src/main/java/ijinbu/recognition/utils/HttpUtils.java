@@ -1,6 +1,7 @@
 package ijinbu.recognition.utils;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,11 +50,11 @@ public class HttpUtils {
             urlconn.getOutputStream().write(value.getBytes(charsetName));
             urlconn.getOutputStream().close();
             code = urlconn.getResponseCode();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ConnectException e) {
+            System.out.println(1);
+        }catch (Exception e){
             System.out.println(code);
         }
-
         return del(urlconn,code);
     }
 

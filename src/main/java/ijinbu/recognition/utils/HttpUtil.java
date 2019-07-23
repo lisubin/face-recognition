@@ -143,11 +143,11 @@ public class HttpUtil {
             out = new PrintWriter(httpConn.getOutputStream());
             // 发送请求参数
             System.out.println(JSONObject.toJSONString(parameters));
-            JSONObject jsonObject = new JSONObject(parameters);
-            JSONArray jsonArray = jsonObject.getJSONArray("gradeIds");
-            System.out.println(jsonArray.toJSONString());
-            out.write(jsonArray.toJSONString());
-//            out.write(JSONObject.toJSONString(parameters));
+//            JSONObject jsonObject = new JSONObject(parameters);
+//            JSONArray jsonArray = jsonObject.getJSONArray("gradeIds");
+//            System.out.println(jsonArray.toJSONString());
+ //           out.write(jsonArray.toJSONString());
+          out.write(JSONObject.toJSONString(parameters));
 
             // flush输出流的缓冲
             out.flush();

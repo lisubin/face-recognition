@@ -648,13 +648,12 @@ public class HkController {
      * @param gender 必填，性别：1-男，2-女
      * @param orgCode 必填，所属班级
      * @param whetherAccountCreate 必填，是否创建用户：true-创建，false-不创建
-     * @param picturePath 选填，kms 图片信息
      * @param cardNum 选填，卡号，必须为字母或数字
      * @return
      */
     @PostMapping(value = "/addOrUpdateStudent")
     @ResponseBody
-    public String addStudents(String personNo, String name, String gender, String orgCode,boolean whetherAccountCreate ,List<String> picturePath,String cardNum) {
+    public String addStudents(String personNo, String name, String gender, String orgCode,boolean whetherAccountCreate,String picturePath,String cardNum) {
 
         //请求参数
         Map<String, Object> parameters = new HashMap<>();
@@ -663,8 +662,10 @@ public class HkController {
         parameters.put("gender", gender);
         parameters.put("orgCode", orgCode);
         parameters.put("whetherAccountCreate", whetherAccountCreate);
-        parameters.put("picturePath", picturePath);
-        parameters.put("cardNum", cardNum);
+        List<String> data = new ArrayList<>();
+        data.add(picturePath);
+        parameters.put("picturePath", data);
+//        parameters.put("cardNum", cardNum);
 
         System.out.println("海康接收参数：" + parameters);
         try {
